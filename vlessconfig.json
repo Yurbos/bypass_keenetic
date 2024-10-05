@@ -1,0 +1,91 @@
+{
+    "log": {
+        "loglevel": "none"
+    },
+    "dns": {
+        "disableFallback": true,
+        "servers": [
+            {
+                "address": "localhost",
+                "domains": [],
+                "queryStrategy": "UseIPv4"
+            }
+        ],
+        "tag": "dns"
+    },
+    "inbounds": [
+        {
+            "port": 10810,
+            "listen": "::",
+            "protocol": "dokodemo-door",
+            "settings": {
+                "network": "tcp",
+                "followRedirect": true
+            },
+            "sniffing": {
+                "enabled": true,
+                "destOverride": ["http", "tls"]
+            },
+            "tag": "dokodemo-in"
+        },
+        {
+            "listen": "127.0.0.1",
+            "port": 2081,
+            "protocol": "http",
+            "sniffing": {
+                "destOverride": ["http", "tls", "quic"],
+                "enabled": true,
+                "metadataOnly": false,
+                "routeOnly": true
+            },
+            "tag": "http-in"
+        }
+    ],
+    "outbounds": [
+        {
+            "mux": {
+                "concurrency": -1,
+                "enabled": false,
+                "xudpConcurrency": 8,
+                "xudpProxyUDP443": ""
+            },
+            "protocol": "vless",
+            "settings": {
+                "vnext": [
+                    {
+                        "address": "{{{IP}}}",
+                        "port": 443,
+                        "users": [
+                            {
+                                "encryption": "none",
+                                "flow": "xtls-rprx-vision",
+                                "id": "{{{ID}}}",
+                                "level": 8,
+                                "security": "auto"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "realitySettings": {
+                    "allowInsecure": false,
+                    "fingerprint": "chrome",
+                    "publicKey": "{{{KEY}}}",
+                    "serverName": "{{{SNI}}}",
+                    "shortId": "{{{shortId}}}",
+                    "show": false,
+                    "spiderX": "{{{/spiderX}}}"
+                },
+                "security": "reality",
+                "tcpSettings": {
+                    "header": {
+                        "type": "none"
+                    }
+                }
+            },
+            "tag": "proxy"
+        }
+    ]
+}
