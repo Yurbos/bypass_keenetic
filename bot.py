@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# ВЕРСИЯ СКРИПТА 2.2.2
+# ВЕРСИЯ СКРИПТА 2.2.3
 
 import asyncio
 import subprocess
@@ -128,7 +128,7 @@ def bot_message(message):
                 return
 
             if message.text == '📄 Информация':
-                url = "https://raw.githubusercontent.com/Yurbos/bypass_keenetic/main/info.md"
+                url = "https://raw.githubusercontent.com/Yurbos/bypass_keenetic/main/Info.md"
                 info_bot = requests.get(url).text
                 bot.send_message(message.chat.id, info_bot, parse_mode='Markdown', disable_web_page_preview=True,
                                  reply_markup=main)
