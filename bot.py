@@ -137,7 +137,7 @@ def bot_message(message):
             if message.text == '/keys_free':
                 url = "https://raw.githubusercontent.com/Yurbos/bypass_keenetic/main/keys.md"
                 keys_free = requests.get(url).text
-                bot.send_message(message.chat.id, keys_free, parse_mode='Markdown', disable_web_page_preview=True)
+                bot.send_message(message.chat.id, keys_free, disable_web_page_preview=True)
                 return
 
             if message.text == '🔄 Обновления' or message.text == '/check_update':
@@ -154,10 +154,10 @@ def bot_message(message):
                 service_new_version = "*ПОСЛЕДНЯЯ ДОСТУПНАЯ ВЕРСИЯ:*\n\n" + str(bot_new_version)
                 service_update_info = service_bot_version + service_new_version
                 # bot.send_message(message.chat.id, service_bot_version, parse_mode='Markdown', reply_markup=service)
-                bot.send_message(message.chat.id, service_update_info, parse_mode='Markdown', reply_markup=service)
+                bot.send_message(message.chat.id, service_update_info, reply_markup=service)
 
                 service_update_msg = "Если вы хотите обновить текущую версию на более новую, нажмите сюда /update"
-                bot.send_message(message.chat.id, service_update_msg, parse_mode='Markdown', reply_markup=service)
+                bot.send_message(message.chat.id, service_update_msg, reply_markup=service)
                 return
 
             if message.text == '/update':
