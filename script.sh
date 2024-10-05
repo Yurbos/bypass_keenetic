@@ -187,7 +187,7 @@ if [ "$1" = "-update" ]; then
     mv /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh /opt/root/backup-"${now}"/100-unblock-vpn.sh
     mv /opt/etc/ndm/netfilter.d/100-redirect.sh /opt/root/backup-"${now}"/100-redirect.sh
     mv /opt/etc/bot.py /opt/root/backup-"${now}"/bot.py
-    mv /opt/etc/bot_config.py /opt/root/backup-"${now}"/bot_config.py
+    cp /opt/etc/bot_config.py /opt/root/backup-"${now}"/bot_config.py
     rm -R /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn > /dev/null 2>&1
     chmod 755 /opt/root/backup-"${now}"/*
     echo "Бэкап создан."
