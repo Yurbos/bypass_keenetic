@@ -105,7 +105,7 @@ def bot_message(message):
             if message.text == "✅ DNS Override ВКЛ" or message.text == "❌ DNS Override ВЫКЛ":
                 if message.text == "✅ DNS Override ВКЛ":
                     os.system("ndmc -c 'opkg dns-override'")
-                    time.sleep(2)
+                    time.sleep(5)
                     os.system("ndmc -c 'system configuration save'")
                     bot.send_message(message.chat.id, '✅ DNS Override включен!\n🔄 Роутер перезагружается.',
                                      reply_markup=service)
@@ -115,7 +115,7 @@ def bot_message(message):
 
                 if message.text == "❌ DNS Override ВЫКЛ":
                     os.system("ndmc -c 'no opkg dns-override'")
-                    time.sleep(2)
+                    time.sleep(5)
                     os.system("ndmc -c 'system configuration save'")
                     bot.send_message(message.chat.id, '✅ DNS Override выключен!\n🔄 Роутер перезагружается.',
                                      reply_markup=service)
@@ -354,15 +354,15 @@ def bot_message(message):
                 level = 0
                 bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
 
-            if message.text == '🔰 Установка и удаление':
-                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-                item1 = types.KeyboardButton("♻️ Установка & переустановка")
-                item2 = types.KeyboardButton("⚠️ Удаление")
-                back = types.KeyboardButton("🔙 Назад")
-                markup.row(item1, item2)
-                markup.row(back)
-                bot.send_message(message.chat.id, '🔰 Установка и удаление', reply_markup=markup)
-                return
+#            if message.text == '🔰 Установка и удаление':
+#                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+#                item1 = types.KeyboardButton("♻️ Установка & переустановка")
+#                item2 = types.KeyboardButton("⚠️ Удаление")
+#                back = types.KeyboardButton("🔙 Назад")
+#                markup.row(item1, item2)
+#                markup.row(back)
+#                bot.send_message(message.chat.id, '🔰 Установка и удаление', reply_markup=markup)
+#                return
 
             if message.text == '♻️ Установка & переустановка':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -391,7 +391,7 @@ def bot_message(message):
                                  reply_markup=main)
 
                 bot.send_message(message.chat.id,
-                                 "Что бы завершить настройку роутера, Зайдите в меню сервис -> DNS Override -> ВКЛ. "
+                                 "Что бы завершить настройку роутера, Зайдите в меню сервис -> DNS Override -> ВКЛ. (Нажать на кнопку 2 раза, не могу поправить багу) "
                                  "Учтите, после выполнения команды, роутер перезагрузится, это займет около 2 минут.",
                                  reply_markup=main)
 
