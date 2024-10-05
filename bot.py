@@ -453,12 +453,12 @@ def vless(key):
     vless_type = vless_raw_conf.split("&")[0].split("?")[1].split("=")[1]
     vless_conf = vless_raw_conf.split("&")
     vless_conf.pop(0)
-    vless_security = vless_conf[0]
-    vless_fp = vless_conf[1]
-    vless_pbk = vless_conf[2]
-    vless_sni = vless_conf[3]
-    vless_sid = vless_conf[4]
-    vless_spx = vless_conf[5]
+    vless_security = vless_conf[0].split("=")[1]
+    vless_fp = vless_conf[1].split("=")[1]
+    vless_pbk = vless_conf[2].split("=")[1]
+    vless_sni = vless_conf[3].split("=")[1]
+    vless_sid = vless_conf[4].split("=")[1]
+    vless_spx = vless_conf[5].split("=")[1]
     f = open('/opt/etc/xray/config.json', 'w')
     sh = '{\n' \
               '"dns": {\n' \
