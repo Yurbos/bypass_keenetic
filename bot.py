@@ -374,10 +374,10 @@ def bot_message(message):
                 level = 0
                 bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
 
-            if level == 101:
-                os.system("sed 's/^token\ =\ '.*'/token\ =\ '" + message.text"'/g' /opt/etc/bot_config.py")
-                level = 0
-                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
+#            if level == 101:
+#                os.system("sed 's/^token\ =\ '.*'/token\ =\ '" + message.text"'/g' /opt/etc/bot_config.py")
+#                level = 0
+#                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
 
             if message.text == '♻️ Установка & переустановка':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
