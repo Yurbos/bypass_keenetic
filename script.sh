@@ -242,22 +242,27 @@ if [ "$1" = "-update" ]; then
     echo "Версия бота" "${bot_old_version}" "обновлена до" "${bot_new_version}."
     sleep 2
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
-    echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)."
-    sleep 7
-    bot_pid=$(ps | grep bot.py | awk '{print $1}')
-    for bot in ${bot_pid}; do kill "${bot}"; done
-    sleep 5
-    python3 /opt/etc/bot.py &
-    check_running=$(pidof python3 /opt/etc/bot.py)
-    if [ -z "${check_running}" ]; then
-      for bot in ${bot_pid}; do kill "${bot}"; done
-      sleep 3
-      python3 /opt/etc/bot.py &
-    else
-      echo "Бот запущен. Нажмите сюда: /start";
-    fi
-
+    echo "Обновление выполнено. Сервисы перезапущены.  Роутер перезагружается!\nЭто займет около 2 минут."
+    sleep 3
+    ndmc -c 'system reboot'
     exit 0
+
+#   Сломан сиквенс, скрипт умиравет вместе с ботом, оставил вышее перезапуск роутера
+
+#    bot_pid=$(ps | grep bot.py | awk '{print $1}')
+#    for bot in ${bot_pid}; do kill "${bot}"; done
+#    sleep 5
+#    python3 /opt/etc/bot.py &
+#    check_running=$(pidof python3 /opt/etc/bot.py)
+#    if [ -z "${check_running}" ]; then
+#      for bot in ${bot_pid}; do kill "${bot}"; done
+#      sleep 3
+#      python3 /opt/etc/bot.py &
+#    else
+#      echo "Бот запущен. Нажмите сюда: /start";
+#    fi
+#
+#    exit 0
 fi
 
 if [ "$1" = "-reboot" ]; then
