@@ -446,6 +446,8 @@ def bot_message(message):
                         if line.startswith('# Ваш идентификатор'):
                             s = line.replace('# ', '')
                             bot_id = s.strip()
+                bot.send_message(message.chat.id, bot_id, disable_web_page_preview=True)
+                return
 
             if message.text == '/vlesskey':
                 vless_key = open('/opt/etc/xray/key', encoding='utf-8')
