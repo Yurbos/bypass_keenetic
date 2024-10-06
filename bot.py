@@ -374,6 +374,11 @@ def bot_message(message):
                 level = 0
                 bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
 
+            if level == 101:
+                os.system("sed 's/^token\ =\ '.*'/token\ =\ '" + message.text"'/g' /opt/etc/bot_config.py")
+                level = 0
+                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
+
             if message.text == '♻️ Установка & переустановка':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 item1 = types.KeyboardButton("‼️Основная")
@@ -464,6 +469,11 @@ def bot_message(message):
             if message.text == '/setid':
                level = 100
                bot.send_message(message.chat.id, '🔑 Скопируйте ID сюда', disable_web_page_preview=True)
+               return
+
+            if message.text == '/settoken':
+               level = 101
+               bot.send_message(message.chat.id, '🔑 Скопируйте Token сюда', disable_web_page_preview=True)
                return
 
     except Exception as error:
