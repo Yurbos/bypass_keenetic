@@ -51,12 +51,13 @@ def start(message):
 def bot_message(message):
     try:
         main = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        m1 = types.KeyboardButton("🔰 Установка и удаление")
+#        m1 = types.KeyboardButton("🔰 Установка и удаление")
         m2 = types.KeyboardButton("🔑 Ключи и мосты")
         m3 = types.KeyboardButton("📝 Списки обхода")
         m4 = types.KeyboardButton("📄 Информация")
         m5 = types.KeyboardButton("⚙️ Сервис")
-        main.add(m1, m2, m3)
+ #       main.add(m1, m2, m3)
+        main.add(m2, m3)
         main.add(m4, m5)
 
         service = types.ReplyKeyboardMarkup(resize_keyboard=True)
