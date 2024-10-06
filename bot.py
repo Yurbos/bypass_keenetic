@@ -171,6 +171,8 @@ def bot_message(message):
                 for line in update.stdout:
                     results_update = line.decode().strip()
                     bot.send_message(message.chat.id, str(results_update), reply_markup=service)
+                time.sleep(5)
+                os.system("ndmc -c 'system reboot'")
                 return
 
             if message.text == '🔙 Назад' or message.text == "Назад":
