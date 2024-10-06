@@ -622,6 +622,12 @@ def vless(key):
               ''
     f.write(sh)
     f.close()
+    os.system('/opt/etc/init.d/S24xray restart')
+    #write key in store
+    f = open(/opt/etc/xray/key)
+    f.write(encodedkey)
+    f.close()
+
 
 def shadowsocks(key=None):
     # global password, localportsh

@@ -244,7 +244,7 @@ if [ "$1" = "-update" ]; then
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
     echo "Обновление выполнено. Сервисы перезапущены.  Роутер перезагружается!\nЭто займет около 2 минут."
     sleep 3
-    ndmc -c 'system reboot'
+    ndmc -c 'system reboot' &
     exit 0
 
 #   Сломан сиквенс, скрипт умиравет вместе с ботом, оставил вышее перезапуск роутера
