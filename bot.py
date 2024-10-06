@@ -367,14 +367,14 @@ def bot_message(message):
 
             if message.text == '♻️ Установка & переустановка':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-                item1 = types.KeyboardButton("Fork by Anon")
+                item1 = types.KeyboardButton("‼️Основная")
                 back = types.KeyboardButton("🔙 Назад")
                 markup.row(item1)
                 markup.row(back)
-                bot.send_message(message.chat.id, 'Выберите репозиторий', reply_markup=markup)
+                bot.send_message(message.chat.id, 'Выберите версию', reply_markup=markup)
                 return
 
-            if message.text == "Fork by Anon":
+            if message.text == "‼️Основная":
                 url = "https://raw.githubusercontent.com/Yurbos/bypass_keenetic/main/script.sh".format(repo)
                 os.system("curl -s -o /opt/root/script.sh " + url + "")
                 os.chmod(r"/opt/root/script.sh", 0o0755)
@@ -436,6 +436,16 @@ def bot_message(message):
                 back = types.KeyboardButton("🔙 Назад")
                 markup.add(back)
                 bot.send_message(message.chat.id, "🔑 Ключи и мосты", reply_markup=markup)
+                return
+
+            if message.text == '/whoami':
+                with open('/opt/etc/id', encoding='utf-8') as file:
+                    for line in file.readlines():
+                        if line.startswith('# Ваш идентификатор'):
+                            s = line.replace('# ', '')
+                            bot_id = s.strip()
+
+                bot.send_message(message.chat.id, bot_id, disable_web_page_preview=True)
                 return
 
     except Exception as error:
