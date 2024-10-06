@@ -367,6 +367,13 @@ def bot_message(message):
 #                bot.send_message(message.chat.id, '🔰 Установка и удаление', reply_markup=markup)
 #                return
 
+            if level == 100:
+                f = open('/opt/etc/id', 'w')
+                f.write('# Ваш идентификатор' + message.text)
+                f.close()
+                level = 0
+                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
+
             if message.text == '♻️ Установка & переустановка':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 item1 = types.KeyboardButton("‼️Основная")
@@ -453,6 +460,11 @@ def bot_message(message):
                 vless_key = open('/opt/etc/xray/key', encoding='utf-8')
                 bot.send_message(message.chat.id, vless_key, disable_web_page_preview=True)
                 return
+            
+            if message.text == '/setid':
+               level = 100
+               bot.send_message(message.chat.id, '🔑 Скопируйте ID сюда', disable_web_page_preview=True)
+               return
 
     except Exception as error:
         file = open("/opt/etc/error.log", "w")
