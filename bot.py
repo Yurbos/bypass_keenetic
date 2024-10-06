@@ -445,7 +445,9 @@ def bot_message(message):
                             s = line.replace('# ', '')
                             bot_id = s.strip()
 
-                bot.send_message(message.chat.id, bot_id, disable_web_page_preview=True)
+            if message.text == '/vlesskey':
+                vless_key = open('/opt/etc/xray/key', encoding='utf-8')
+                bot.send_message(message.chat.id, vless_key, disable_web_page_preview=True)
                 return
 
     except Exception as error:
