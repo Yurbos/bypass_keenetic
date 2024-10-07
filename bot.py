@@ -133,6 +133,11 @@ def bot_message(message):
                 info_bot = requests.get(url).text
                 bot.send_message(message.chat.id, info_bot, parse_mode='Markdown', disable_web_page_preview=True,
                                  reply_markup=main)
+                hostname = subprocess.Popen(['hostname'], stdout=subprocess.PIPE)
+                for line in hostname.stdout:
+                    results_hostname = line.decode().strip()
+                    bot.send_message(message.chat.id,'Имя устройства: ' + str(results_hostname), reply_markup=main)
+
                 with open('/opt/etc/id', encoding='utf-8') as file:
                     for line in file.readlines():
                         if line.startswith('# Ваш идентификатор'):
