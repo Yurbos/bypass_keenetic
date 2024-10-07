@@ -144,9 +144,6 @@ def bot_message(message):
                 bot.send_message(message.chat.id, vless_key, disable_web_page_preview=True)
                 return
 
-                
-                return
-
             if message.text == '/keys_free':
                 url = "https://raw.githubusercontent.com/Yurbos/bypass_keenetic/main/keys.md"
                 keys_free = requests.get(url).text
