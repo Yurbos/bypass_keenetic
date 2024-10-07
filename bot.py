@@ -133,6 +133,18 @@ def bot_message(message):
                 info_bot = requests.get(url).text
                 bot.send_message(message.chat.id, info_bot, parse_mode='Markdown', disable_web_page_preview=True,
                                  reply_markup=main)
+                with open('/opt/etc/id', encoding='utf-8') as file:
+                    for line in file.readlines():
+                        if line.startswith('# Ваш идентификатор'):
+                            s = line.replace('# ', '')
+                            bot_id = s.strip()
+                bot.send_message(message.chat.id, bot_id, disable_web_page_preview=True)
+                bot.send_message(message.chat.id, 'Установленный ключ vless', disable_web_page_preview=True)
+                vless_key = open('/opt/etc/xray/key', encoding='utf-8')
+                bot.send_message(message.chat.id, vless_key, disable_web_page_preview=True)
+                return
+
+                
                 return
 
             if message.text == '/keys_free':
