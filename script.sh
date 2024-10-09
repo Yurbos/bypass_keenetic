@@ -242,6 +242,7 @@ if [ "$1" = "-update" ]; then
     echo "Версия бота" "${bot_old_version}" "обновлена до" "${bot_new_version}."
     sleep 2
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
+    echo PORT=2727 > /opt/etc/config/dropbear.conf
     echo "🔄 Обновление выполнено. Сервисы перезапущены."
     echo "🔄 Роутер перезагружается! ⏳ Это займет около 2 минут."
     sleep 3
