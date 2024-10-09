@@ -40,11 +40,11 @@ def start(message):
         bot.send_message(message.chat.id, 'Вы не являетесь автором канала')
         return
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("🔰 Установка и удаление")
+#    item1 = types.KeyboardButton("🔰 Установка и удаление")
     item2 = types.KeyboardButton("🔑 Ключи и мосты")
     item3 = types.KeyboardButton("📝 Списки обхода")
     item4 = types.KeyboardButton("⚙️ Сервис")
-    markup.add(item1, item2, item3, item4)
+    markup.add(item2, item3, item4)
     bot.send_message(message.chat.id, '✅ Добро пожаловать в меню!', reply_markup=markup)
 
 @bot.message_handler(content_types=['text'])
@@ -371,15 +371,15 @@ def bot_message(message):
                 level = 0
                 bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
 
-#            if message.text == '🔰 Установка и удаление':
-#                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-#                item1 = types.KeyboardButton("♻️ Установка & переустановка")
-#                item2 = types.KeyboardButton("⚠️ Удаление")
-#                back = types.KeyboardButton("🔙 Назад")
-#                markup.row(item1, item2)
-#                markup.row(back)
-#                bot.send_message(message.chat.id, '🔰 Установка и удаление', reply_markup=markup)
-#                return
+            if message.text == '🔰 Установка и удаление':
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("♻️ Установка & переустановка")
+                item2 = types.KeyboardButton("⚠️ Удаление")
+                back = types.KeyboardButton("🔙 Назад")
+                markup.row(item1, item2)
+                markup.row(back)
+                bot.send_message(message.chat.id, '🔰 Установка и удаление', reply_markup=markup)
+                return
 
             if level == 100:
                 f = open('/opt/etc/id', 'w')
