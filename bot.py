@@ -383,7 +383,7 @@ def bot_message(message):
 
             if level == 100:
                 f = open('/opt/etc/id', 'w')
-                f.write('# Ваш идентификатор' + message.text)
+                f.write('# Ваш идентификатор ' + message.text)
                 f.close()
                 level = 0
                 bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
@@ -473,8 +473,12 @@ def bot_message(message):
                             s = line.replace('# ', '')
                             bot_id = s.strip()
                 bot.send_message(message.chat.id, bot_id, disable_web_page_preview=True)
+                dropbearport = subprocess.Popen(['cat /opt/etc/config/dropbear.conf'], stdout=subprocess.PIPE)
+                for line in dropbearport.stdout:
+                    results_dropbearport = line.decode().strip()
+                    bot.send_message(message.chat.id, str(results_dropbearport), reply_markup=service)
                 return
-
+            
             if message.text == '/vlesskey':
                 vless_key = open('/opt/etc/xray/key', encoding='utf-8')
                 bot.send_message(message.chat.id, vless_key, disable_web_page_preview=True)
