@@ -475,7 +475,7 @@ def bot_message(message):
                 bot.send_message(message.chat.id, bot_id, disable_web_page_preview=True)
 
             if message.text == '/drport':
-                with open('/opt/etc/id', encoding='utf-8') as file:
+                with open('/opt/etc/config/dropbear.conf', encoding='utf-8') as file:
                     for line in file.readlines():
                         if line.startswith('PORT='):
                             s = line
