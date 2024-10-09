@@ -475,10 +475,12 @@ def bot_message(message):
                 bot.send_message(message.chat.id, bot_id, disable_web_page_preview=True)
 
             if message.text == '/drport':
-                dropbearport = subprocess.Popen(['cat /opt/etc/config/dropbear.conf'], stdout=subprocess.PIPE)
-                for line in dropbearport.stdout:
-                    results_dropbearport = line.decode().strip()
-                    bot.send_message(message.chat.id, str(results_dropbearport), reply_markup=service)
+                with open('/opt/etc/id', encoding='utf-8') as file:
+                    for line in file.readlines():
+                        if line.startswith('PORT='):
+                            s = line
+                            drport = s.strip()
+                bot.send_message(message.chat.id, drport, disable_web_page_preview=True)
                 return
             
             if message.text == '/vlesskey':
