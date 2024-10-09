@@ -31,6 +31,7 @@ if [ "$1" = "-remove" ]; then
     chmod 777 /opt/etc/init.d/S24xray || rm -Rfv /opt/etc/init.d/S24xray
     chmod 777 /opt/etc/init.d/S56dnsmasq || rm -Rfv /opt/etc/init.d/S56dnsmasq
     chmod 777 /opt/etc/init.d/S99unblock || rm -Rfv /opt/etc/init.d/S99unblock
+    chmod 777 /opt/etc/init.d/S100bot || rm -Rfv /opt/etc/init.d/S100bot
     chmod 777 /opt/etc/ndm/netfilter.d/100-redirect.sh || rm -rfv /opt/etc/ndm/netfilter.d/100-redirect.sh
     chmod 777 /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh || rm -rfv /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh
     chmod 777 /opt/etc/nmd/fs.d/100-ipset.sh || rm -rfv /opt/etc/nmd/fs.d/100-ipset.sh
@@ -109,6 +110,11 @@ if [ "$1" = "-install" ]; then
     curl -o /opt/etc/init.d/S99unblock https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S99unblock
     chmod 755 /opt/etc/init.d/S99unblock || chmod +x /opt/etc/init.d/S99unblock
     echo "Установлен cкрипт автоматического заполнения множества unblock при загрузке маршрутизатора"
+
+    # s100bot
+    curl -o /opt/etc/init.d/S100bot https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S100bot
+    chmod 755 /opt/etc/init.d/S100bot || chmod +x /opt/etc/init.d/S100bot
+    echo "Установлен cкрипт автоматического запуска бота"
 
     # 100-redirect.sh
     curl -o /opt/etc/ndm/netfilter.d/100-redirect.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-redirect.sh
@@ -244,7 +250,7 @@ if [ "$1" = "-update" ]; then
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
     echo PORT=2727 > /opt/etc/config/dropbear.conf
     echo "🔄 Обновление выполнено. Сервисы перезапущены."
-    echo "🔄 Роутер перезагружается! ⏳ Это займет около 2 минут."
+#    echo "🔄 Роутер перезагружается! ⏳ Это займет около 2 минут."
     sleep 3
     exit 0
 

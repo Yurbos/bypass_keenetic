@@ -186,7 +186,7 @@ def bot_message(message):
                     results_update = line.decode().strip()
                     bot.send_message(message.chat.id, str(results_update), reply_markup=service)
                 time.sleep(5)
-                os.system("ndmc -c 'system reboot'")
+                os.system("/opt/etc/init.d/S100bot restart")
                 return
 
             if message.text == '🔙 Назад' or message.text == "Назад":
