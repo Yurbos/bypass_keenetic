@@ -710,7 +710,7 @@ def vless(key):
     os.system('/opt/etc/init.d/S24xray restart')
     #write key in store
     f = open('/opt/etc/xray/key', 'w')
-    f.write(encodedkey)
+    f.write(config_str)
     f.close()
 
 
