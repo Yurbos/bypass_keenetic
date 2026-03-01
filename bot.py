@@ -16,6 +16,9 @@ import requests
 import json
 import bot_config as config
 
+import sys
+import urllib.parse
+
 token = config.token
 usernames = config.usernames
 routerip = config.routerip
@@ -506,20 +509,52 @@ def bot_message(message):
 
 def vless(key):
     # global password, localportvless
-    encodedkey = key
-    vless_raw_conf  = encodedkey
-    vless_id = vless_raw_conf.split("&")[0].split("?")[0].split("@")[0].split("//")[1]
-    vless_ip =  vless_raw_conf.split("&")[0].split("?")[0].split("@")[1].split(":")[0]
-    vless_port = vless_raw_conf.split("&")[0].split("?")[0].split("@")[1].split(":")[1]
-    vless_type = vless_raw_conf.split("&")[0].split("?")[1].split("=")[1]
-    vless_conf = vless_raw_conf.split("&")
-    vless_conf.pop(0)
-    vless_security = vless_conf[0].split("=")[1]
-    vless_fp = vless_conf[1].split("=")[1]
-    vless_pbk = vless_conf[2].split("=")[1]
-    vless_sni = vless_conf[3].split("=")[1]
-    vless_sid = vless_conf[4].split("=")[1]
-    vless_spx = vless_conf[5].split("=")[1]
+    config_str = key
+
+    # Разбор URL
+    parsed = urllib.parse.urlparse(config_str)
+
+    # --- Извлечение UUID, сервера и порта из netloc ---
+    netloc = parsed.netloc  # например "25220c2-f0ae-4a66-99c5-6e1a44e81cc9@7.22.203.11:10051"
+
+    if '@' in netloc:
+        userinfo, hostport = netloc.split('@', 1)
+    else:
+        userinfo = None
+        hostport = netloc
+
+    vless_id = userinfo  # это UUID
+
+    # Разделяем хост и порт
+    if ':' in hostport:
+        vless_ip, port_str = hostport.split(':', 1)
+        try:
+            vless_port = int(port_str)
+        except ValueError:
+            vless_port = port_str  # если порт не число, оставляем как строку
+    else:
+        vless_ip = hostport
+        vless_port = None
+
+    # --- Разбор query-параметров ---
+    # parse_qs возвращает словарь {ключ: [значения]}, берём первое значение
+    query_dict = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
+    params = {k: v[0] for k, v in query_dict.items()}
+
+    # Извлекаем параметры (если какого-то нет, будет None)
+    vless_type = params.get('type')
+    encryption = params.get('encryption')
+    vless_security = params.get('security')
+    vless_pbk = params.get('pbk')
+    vless_fp = params.get('fp')
+    vless_sni = params.get('sni')
+    vless_sid = params.get('sid')
+    vless_spx = params.get('spx')      # автоматически декодируется из %2F в '/'
+    flow = params.get('flow')
+
+    # --- Фрагмент (часть после #) ---
+    fragment = parsed.fragment
+
     f = open('/opt/etc/xray/config.json', 'w')
     sh = '{\n' \
               '"dns": {\n' \
@@ -588,7 +623,7 @@ def vless(key):
               '            "users": [\n' \
               '              {\n' \
               '                "encryption": "none",\n' \
-              '                "flow": "",\n' \
+              '                "flow": "' + str(flow) + '"\n' \
               '                "id": "' + str(vless_id) +'"\n' \
               '              }\n' \
               '            ]\n' \
