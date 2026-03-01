@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# ВЕРСИЯ СКРИПТА 2.2.3
+# ВЕРСИЯ СКРИПТА 2.2.4
 
 import asyncio
 import subprocess
