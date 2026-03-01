@@ -623,7 +623,7 @@ def vless(key):
               '            "users": [\n' \
               '              {\n' \
               '                "encryption": "none",\n' \
-              '                "flow": "' + str(flow) + '"\n' \
+              '                "flow": "' + str(flow) + '",\n' \
               '                "id": "' + str(vless_id) +'"\n' \
               '              }\n' \
               '            ]\n' \
