@@ -116,7 +116,7 @@ if [ "$1" = "-install" ]; then
     # s100bot
     curl -o /opt/etc/init.d/S100bot https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S100bot
     chmod 755 /opt/etc/init.d/S100bot || chmod +x /opt/etc/init.d/S100bot
-    curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/mainS101web
+    curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S101web
     chmod 755 /opt/etc/init.d/S101web || chmod +x /opt/etc/init.d/S101web
     echo "Установлен cкрипт автоматического запуска бота"
 
@@ -241,7 +241,7 @@ if [ "$1" = "-update" ]; then
 
     curl -s -o /opt/etc/bot.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot.py
     chmod 755 /opt/etc/bot.py
-    curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/mainS101web
+    curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S101web
     chmod 755 /opt/etc/init.d/S101web || chmod +x /opt/etc/init.d/S101web
     mkdir -p /opt/root/www/
     curl -s -o /opt/root/www/index.html https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/index.html
