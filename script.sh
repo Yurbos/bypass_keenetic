@@ -51,7 +51,7 @@ if [ "$1" = "-install" ]; then
     echo "Ваша версия KeenOS" "${keen_os_full}"
     opkg update
     opkg install bind-dig cron dnsmasq-full ipset iptables shadowsocks-libev-ss-redir shadowsocks-libev-config xray
-    pip install pyTelegramBotAPI telethon pathlib
+    pip install pyTelegramBotAPI telethon pathlib flask flask_cors
     echo "Установка пакетов завершена. Продолжаем установку"
 
     # есть поддержка множества hash:net или нет, если нет, то при этом вы потеряете возможность разблокировки по диапазону и CIDR
@@ -115,6 +115,8 @@ if [ "$1" = "-install" ]; then
     # s100bot
     curl -o /opt/etc/init.d/S100bot https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S100bot
     chmod 755 /opt/etc/init.d/S100bot || chmod +x /opt/etc/init.d/S100bot
+    curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/mainS101web
+    chmod 755 /opt/etc/init.d/S101web || chmod +x /opt/etc/init.d/S101web
     echo "Установлен cкрипт автоматического запуска бота"
 
     # 100-redirect.sh
@@ -178,6 +180,7 @@ if [ "$1" = "-update" ]; then
     echo "Начинаем обновление."
     opkg update > /dev/null 2>&1
     echo "Ваша версия KeenOS" "${keen_os_full}."
+    pip install pyTelegramBotAPI telethon pathlib flask flask_cors
     echo "Пакеты обновлены."
 
     /opt/etc/init.d/S22shadowsocks stop > /dev/null 2>&1
@@ -237,6 +240,10 @@ if [ "$1" = "-update" ]; then
 
     curl -s -o /opt/etc/bot.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot.py
     chmod 755 /opt/etc/bot.py
+    mkdir -p /opt/root/www/
+    curl -s -o /opt/root/www/index.html https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/index.html
+    curl -s -o /opt/root/web_api.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web_api.py
+    chmod 755 /opt/root/web_api.py
     echo "Обновления скачены, права настроены."
 
     /opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1

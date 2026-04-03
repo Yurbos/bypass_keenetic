@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление обходом блокировок</title>
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+        body { background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 28px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        h1 { font-size: 1.8rem; margin: 0 0 8px; color: #1f2d3d; display: flex; align-items: center; gap: 8px; }
+        .menu-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 20px; }
+        .menu-btn { flex: 1 1 160px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 60px; padding: 12px; text-align: center; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .menu-btn.active { background: #1e40af; border-color: #1e40af; color: white; }
+        .content-card { background: white; border-radius: 24px; padding: 20px; border: 1px solid #eef2ff; }
+        .section-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .back-btn { background: none; border: none; font-size: 0.9rem; color: #3b82f6; cursor: pointer; padding: 6px 12px; border-radius: 30px; background: #eff6ff; }
+        .key-block { background: #f9fafb; border-radius: 20px; padding: 16px; margin-bottom: 20px; }
+        .btn-sm { background: #eef2ff; border: none; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; font-weight: 500; }
+        .btn-primary { background: #1e40af; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; }
+        .domain-list { max-height: 300px; overflow-y: auto; background: white; border-radius: 16px; padding: 12px; border: 1px solid #e2e8f0; font-family: monospace; margin-top: 12px; }
+        .list-selector { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .list-tag { background: #f1f5f9; padding: 6px 16px; border-radius: 40px; cursor: pointer; }
+        .list-tag.active-list { background: #1e40af; color: white; }
+        .alert { background: #dcfce7; padding: 8px 14px; border-radius: 40px; color: #166534; margin: 8px 0; font-size: 0.8rem; }
+        footer { text-align: center; margin-top: 24px; font-size: 0.7rem; color: #94a3b8; }
+        button:active { transform: scale(0.97); }
+        .input-group { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+        .input-group input, .input-group textarea { flex: 1; padding: 8px 14px; border-radius: 28px; border: 1px solid #cbd5e1; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛡️ Обход блокировок</h1>
+    <div id="app">
+        <div class="menu-grid" id="mainMenu">
+            <div class="menu-btn" data-section="keys">🔑 Ключи и мосты</div>
+            <div class="menu-btn" data-section="lists">📝 Списки обхода</div>
+            <div class="menu-btn" data-section="service">⚙️ Сервис</div>
+            <div class="menu-btn" data-section="info">📄 Информация</div>
+        </div>
+        <div id="contentArea" class="content-card"></div>
+        <footer>Управление системой через API роутера</footer>
+    </div>
+</div>
+
+<script>
+    let currentSection = 'keys';
+    let currentList = 'general';
+
+    async function apiCall(endpoint, method = 'GET', body = null) {
+        const options = {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+        };
+        if (body) options.body = JSON.stringify(body);
+        const response = await fetch(`/api/${endpoint}`, options);
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            throw new Error(err.error || `HTTP ${response.status}`);
+        }
+        return response.json();
+    }
+
+    function showToast(msg, type = 'success') {
+        const area = document.getElementById('contentArea');
+        const toast = document.createElement('div');
+        toast.className = 'alert';
+        toast.style.backgroundColor = type === 'error' ? '#fee2e2' : '#dcfce7';
+        toast.style.color = type === 'error' ? '#991b1b' : '#166534';
+        toast.innerText = msg;
+        area.prepend(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    window.setSection = function(section) {
+        currentSection = section;
+        renderCurrentSection();
+    };
+
+    window.setCurrentList = function(listName) {
+        currentList = listName;
+        renderCurrentSection();
+    };
+
+    async function renderCurrentSection() {
+        const area = document.getElementById('contentArea');
+        if (!area) return;
+        let html = '';
+        switch(currentSection) {
+            case 'keys':
+                html = await renderKeys();
+                break;
+            case 'lists':
+                html = await renderLists();
+                break;
+            case 'service':
+                html = renderService();
+                break;
+            case 'info':
+                html = await renderInfo();
+                break;
+        }
+        area.innerHTML = html;
+        document.querySelectorAll('.menu-btn').forEach(btn => {
+            const sec = btn.getAttribute('data-section');
+            if (sec === currentSection) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+
+    async function renderKeys() {
+        try {
+            const status = await apiCall('status');
+            return `
+                <div class="section-title">
+                    🔑 Ключи и мосты
+                    <button class="back-btn" onclick="setSection('keys')">← Назад</button>
+                </div>
+                <div class="key-block">
+                    <div class="flex-between" style="display:flex; justify-content:space-between;">
+                        <strong>Shadowsocks</strong>
+                        <button class="btn-sm" onclick="promptSsKey()">✏️ Обновить ключ</button>
+                    </div>
+                    <div style="background:#eef2ff; padding:8px; border-radius:16px; word-break:break-all;">${escapeHtml(status.ss_key || 'не установлен')}</div>
+                </div>
+                <div class="key-block">
+                    <div class="flex-between" style="display:flex; justify-content:space-between;">
+                        <strong>Vless</strong>
+                        <button class="btn-sm" onclick="promptVlessKey()">✏️ Обновить ключ</button>
+                    </div>
+                    <div style="background:#eef2ff; padding:8px; border-radius:16px; word-break:break-all;">${escapeHtml(status.vless_key || 'не установлен')}</div>
+                </div>
+            `;
+        } catch(e) {
+            return `<div>Ошибка загрузки: ${e.message}</div>`;
+        }
+    }
+
+    async function renderLists() {
+        try {
+            const listsData = await apiCall('lists');
+            const lists = listsData.lists;
+            if (!lists.includes(currentList) && lists.length) currentList = lists[0];
+            const content = await apiCall(`lists/${currentList}`);
+            const domainsHtml = content.domains.map(d => `<div class="domain-item">📌 ${escapeHtml(d)}</div>`).join('');
+            return `
+                <div class="section-title">
+                    📝 Списки обхода
+                    <button class="back-btn" onclick="setSection('main')">← Назад</button>
+                </div>
+                <div class="list-selector">
+                    ${lists.map(name => `<span class="list-tag ${currentList === name ? 'active-list' : ''}" onclick="setCurrentList('${name}')">📂 ${escapeHtml(name)}</span>`).join('')}
+                </div>
+                <div class="flex-between" style="display:flex; justify-content:space-between;">
+                    <strong>Список: ${escapeHtml(currentList)}</strong>
+                    <div>
+                        <button class="btn-sm" onclick="showListContent()">📑 Показать список</button>
+                        <button class="btn-sm" onclick="showAddDomainForm()">📝 Добавить</button>
+                        <button class="btn-sm" onclick="showRemoveDomainForm()">🗑 Удалить</button>
+                    </div>
+                </div>
+                <div class="domain-list">
+                    ${domainsHtml || '<i>Список пуст</i>'}
+                </div>
+            `;
+        } catch(e) {
+            return `<div>Ошибка загрузки списков: ${e.message}</div>`;
+        }
+    }
+
+    function renderService() {
+        return `
+            <div class="section-title">
+                ⚙️ Сервис
+                <button class="back-btn" onclick="setSection('main')">← Назад</button>
+            </div>
+            <div class="key-block">
+                <button class="btn-primary" style="width:100%; margin-bottom:10px;" onclick="restartServices()">♻️ Перезагрузить сервисы</button>
+                <button class="btn-primary" style="width:100%; margin-bottom:10px; background:#dc2626;" onclick="rebootRouter()">‼️ Перезагрузить роутер</button>
+                <hr>
+                <div class="flex-between"><strong>DNS Override</strong>
+                    <div><button class="btn-sm" onclick="dnsOverride('enable')">✅ ВКЛ</button>
+                    <button class="btn-sm" onclick="dnsOverride('disable')">❌ ВЫКЛ</button></div>
+                </div>
+                <hr>
+                <div class="flex-between"><strong>Обновления</strong>
+                    <button class="btn-sm" onclick="checkUpdates()">🔄 Проверить обновления</button>
+                </div>
+                <div id="updateInfo" style="margin-top:12px;"></div>
+            </div>
+        `;
+    }
+
+    async function renderInfo() {
+        try {
+            const status = await apiCall('status');
+            return `
+                <div class="section-title">
+                    📄 Информация
+                    <button class="back-btn" onclick="setSection('main')">← Назад</button>
+                </div>
+                <div><strong>Имя устройства:</strong> ${escapeHtml(status.hostname)}</div>
+                <div><strong>Ваш идентификатор:</strong> ${escapeHtml(status.bot_id)}</div>
+                <div><strong>Версия бота:</strong> ${escapeHtml(status.bot_version)}</div>
+                <hr>
+                <button class="btn-sm" onclick="promptSetId()">🔑 Установить ID</button>
+                <button class="btn-sm" onclick="alert('Ваш ID: ' + (document.getElementById('botId')?.innerText || 'не установлен'))">🆔 Показать ID</button>
+                <button class="btn-sm" onclick="alert('Vless ключ:\\n' + (${JSON.stringify(status.vless_key)} || 'не установлен'))">🔐 Показать Vless ключ</button>
+            `;
+        } catch(e) {
+            return `<div>Ошибка: ${e.message}</div>`;
+        }
+    }
+
+    // Действия
+    window.showListContent = async function() {
+        try {
+            const data = await apiCall(`lists/${currentList}`);
+            alert(data.domains.join('\n') || 'Список пуст');
+        } catch(e) { alert('Ошибка: '+e.message); }
+    };
+    window.showAddDomainForm = function() {
+        const val = prompt('Введите домены (по одному или несколько через перенос строки):');
+        if(val && val.trim()) {
+            const domains = val.split(/\r?\n/).filter(l=>l.trim());
+            apiCall(`lists/${currentList}`, 'POST', { action: 'add', domains })
+                .then(() => { showToast('Добавлено'); renderCurrentSection(); })
+                .catch(e => showToast(e.message, 'error'));
+        }
+    };
+    window.showRemoveDomainForm = function() {
+        const val = prompt('Введите домены для удаления:');
+        if(val && val.trim()) {
+            const domains = val.split(/\r?\n/).filter(l=>l.trim());
+            apiCall(`lists/${currentList}`, 'POST', { action: 'remove', domains })
+                .then(() => { showToast('Удалено'); renderCurrentSection(); })
+                .catch(e => showToast(e.message, 'error'));
+        }
+    };
+    window.restartServices = async function() {
+        await apiCall('service/restart', 'POST');
+        showToast('Сервисы перезагружены');
+    };
+    window.rebootRouter = async function() {
+        if(confirm('Перезагрузить роутер?')) {
+            await apiCall('service/reboot', 'POST');
+            showToast('Роутер перезагружается...');
+        }
+    };
+    window.dnsOverride = async function(action) {
+        await apiCall('service/dns_override', 'POST', { action });
+        showToast(`DNS Override ${action === 'enable' ? 'включён' : 'выключен'}, роутер перезагружается`);
+    };
+    window.checkUpdates = async function() {
+        try {
+            const data = await apiCall('update/check');
+            const infoDiv = document.getElementById('updateInfo');
+            if(infoDiv) {
+                infoDiv.innerHTML = `<div>Текущая: ${data.current}<br>Последняя: ${data.latest}<br><button class="btn-sm" onclick="performUpdate()">⬇️ Обновить до ${data.latest}</button></div>`;
+            }
+        } catch(e) { alert(e.message); }
+    };
+    window.performUpdate = async function() {
+        await apiCall('update/perform', 'POST');
+        showToast('Обновление запущено, бот перезагрузится');
+    };
+    window.promptSsKey = async function() {
+        const newKey = prompt('Вставьте ключ Shadowsocks (ss://...):');
+        if(newKey && newKey.trim()) {
+            await apiCall('keys/shadowsocks', 'POST', { key: newKey.trim() });
+            showToast('Ключ Shadowsocks сохранён');
+            renderCurrentSection();
+        }
+    };
+    window.promptVlessKey = async function() {
+        const newKey = prompt('Вставьте ключ Vless (vless://...):');
+        if(newKey && newKey.trim()) {
+            await apiCall('keys/vless', 'POST', { key: newKey.trim() });
+            showToast('Ключ Vless сохранён');
+            renderCurrentSection();
+        }
+    };
+    window.promptSetId = async function() {
+        const newId = prompt('Введите новый идентификатор:');
+        if(newId && newId.trim()) {
+            await apiCall('set_id', 'POST', { id: newId.trim() });
+            showToast('ID обновлён');
+            renderCurrentSection();
+        }
+    };
+
+    function escapeHtml(str) { return str?.replace(/[&<>]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]; }) || ''; }
+
+    document.getElementById('mainMenu')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.menu-btn');
+        if(btn) setSection(btn.getAttribute('data-section'));
+    });
+
+    renderCurrentSection();
+</script>
+</body>
+</html>
