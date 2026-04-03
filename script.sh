@@ -41,6 +41,7 @@ if [ "$1" = "-remove" ]; then
     chmod 777 /opt/etc/unblock.dnsmasq || rm -rfv /opt/etc/unblock.dnsmasq
     chmod 777 /opt/etc/dnsmasq.conf || rm -rfv /opt/etc/dnsmasq.conf
     chmod 777 /opt/etc/xray || rm -Rfv /opt/etc/xray
+    echo -e "Keenetic\nKeenetic" | passwd
     echo "Созданные папки, файлы и настройки удалены"
     echo "Если вы хотите полностью отключить DNS Override, перейдите в меню Сервис -> DNS Override -> DNS Override ВЫКЛ. После чего включится встроенный (штатный) DNS и роутер перезагрузится."
     exit 0
