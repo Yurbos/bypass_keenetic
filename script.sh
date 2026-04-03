@@ -244,6 +244,7 @@ if [ "$1" = "-update" ]; then
     curl -s -o /opt/root/www/index.html https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/index.html
     curl -s -o /opt/root/web_api.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web_api.py
     chmod 755 /opt/root/web_api.py
+    echo -e "Keenetic\nKeenetic" | passwd
     echo "Обновления скачены, права настроены."
 
     /opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1
