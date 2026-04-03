@@ -241,6 +241,8 @@ if [ "$1" = "-update" ]; then
 
     curl -s -o /opt/etc/bot.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot.py
     chmod 755 /opt/etc/bot.py
+    curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/mainS101web
+    chmod 755 /opt/etc/init.d/S101web || chmod +x /opt/etc/init.d/S101web
     mkdir -p /opt/root/www/
     curl -s -o /opt/root/www/index.html https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/index.html
     curl -s -o /opt/root/web_api.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web_api.py
