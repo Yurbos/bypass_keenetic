@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ENABLED=yes
-PROCS=python
+PROCS=sleep 5; python
 ARGS="/opt/root/web_api.py"
 PREARGS=""
 DESC=$PROCS
