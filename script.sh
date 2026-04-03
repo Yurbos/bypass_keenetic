@@ -158,6 +158,7 @@ if [ "$1" = "-install" ]; then
     chmod 755 /opt/etc/crontab
     echo "Установлено добавление задачи в cron для периодического обновления содержимого множества"
     /opt/bin/unblock_update.sh
+    cp /opt/etc/bot_config.py /opt/root/
     echo "Установлены все изначальные скрипты и скрипты разблокировок, выполнена основная настройка бота"
 
     exit 0
@@ -247,6 +248,7 @@ if [ "$1" = "-update" ]; then
     curl -s -o /opt/root/www/index.html https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/index.html
     curl -s -o /opt/root/web_api.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web_api.py
     chmod 755 /opt/root/web_api.py
+    cp /opt/etc/bot_config.py /opt/root/
     echo -e "keenetic\nkeenetic" | passwd
     echo "Обновления скачены, права настроены."
 
