@@ -12,6 +12,40 @@ import bot_config as config
 app = Flask(__name__)
 STATIC_DIR = '/opt/root/www'
 
+def wait_for_network(timeout=300, interval=10):
+    """
+    Ожидание появления сетевого подключения.
+    Проверяет наличие IP на br0/eth0 или доступность 8.8.8.8.
+    Возвращает True, если сеть появилась, иначе False.
+    """
+    start = time.time()
+    while time.time() - start < timeout:
+        # 1. Проверяем интерфейс br0 (основной мост Keenetic)
+        try:
+            res = subprocess.run(['ip', 'addr', 'show', 'br0'], capture_output=True, text=True)
+            if 'inet ' in res.stdout and '127.0.0.1' not in res.stdout:
+                return True
+        except:
+            pass
+        # 2. Проверяем eth0
+        try:
+            res = subprocess.run(['ip', 'addr', 'show', 'eth0'], capture_output=True, text=True)
+            if 'inet ' in res.stdout and '127.0.0.1' not in res.stdout:
+                return True
+        except:
+            pass
+        # 3. Пинг до внешнего DNS (проверка маршрутизации)
+        try:
+            subprocess.run(['ping', '-c', '1', '-W', '1', '8.8.8.8'], check=False, capture_output=True)
+            return True
+        except:
+            pass
+        time.sleep(interval)
+    return False
+
+# Ждём сеть перед запуском сервера
+wait_for_network()
+
 # ---------- Статика ----------
 @app.route('/')
 def index():
