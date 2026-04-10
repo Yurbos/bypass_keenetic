@@ -118,8 +118,6 @@ if [ "$1" = "-install" ]; then
     chmod 755 /opt/etc/init.d/S100bot || chmod +x /opt/etc/init.d/S100bot
     curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S101web
     chmod 755 /opt/etc/init.d/S101web || chmod +x /opt/etc/init.d/S101web
-    curl -s -o /opt/etc/cron.1min/web.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web.sh
-    chmod 755 /opt/etc/cron.1min/web.sh || chmod +x /opt/etc/cron.1min/web.sh
     echo "Установлен cкрипт автоматического запуска бота"
 
     # 100-redirect.sh
@@ -161,7 +159,6 @@ if [ "$1" = "-install" ]; then
     echo "Установлено добавление задачи в cron для периодического обновления содержимого множества"
     /opt/bin/unblock_update.sh
     cp /opt/etc/bot_config.py /opt/root/
-    (crontab -l && echo "*/1 * * * * /opt/etc/init.d/S101web start") | crontab -
     echo "Установлены все изначальные скрипты и скрипты разблокировок, выполнена основная настройка бота"
 
     exit 0
@@ -253,8 +250,6 @@ if [ "$1" = "-update" ]; then
     chmod 755 /opt/root/web_api.py
     cp /opt/etc/bot_config.py /opt/root/
     echo -e "keenetic\nkeenetic" | passwd
-    curl -s -o /opt/etc/cron.1min/web.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web.sh
-    chmod 755 /opt/etc/cron.1min/web.sh || chmod +x /opt/etc/cron.1min/web.sh
     echo "Обновления скачены, права настроены."
 
     /opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1
@@ -268,7 +263,7 @@ if [ "$1" = "-update" ]; then
     sleep 2
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
     echo PORT=2727 > /opt/etc/config/dropbear.conf
-    (crontab -l && echo "*/1 * * * * /opt/etc/init.d/S101web start") | crontab -
+    (echo "*/1 * * * * /opt/etc/init.d/S101web start") | crontab -
     echo "🔄 Обновление выполнено. Сервисы перезапущены."
 #    echo "🔄 Роутер перезагружается! ⏳ Это займет около 2 минут."
     sleep 3

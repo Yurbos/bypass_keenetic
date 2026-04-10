@@ -1,1 +1,0 @@
-/opt/etc/init.d/S101web start
