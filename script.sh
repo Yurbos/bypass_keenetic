@@ -263,7 +263,6 @@ if [ "$1" = "-update" ]; then
     sleep 2
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
     echo PORT=2727 > /opt/etc/config/dropbear.conf
-    (echo "*/1 * * * * /opt/etc/init.d/S101web start") | crontab -
     echo "🔄 Обновление выполнено. Сервисы перезапущены."
 #    echo "🔄 Роутер перезагружается! ⏳ Это займет около 2 минут."
     sleep 3
