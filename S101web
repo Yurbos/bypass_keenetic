@@ -1,5 +1,5 @@
 ENABLED=yes
-PROCS=python
+PROCS=python3
 ARGS="/opt/root/web_api.py"
 PREARGS=""
 DESC=$PROCS
