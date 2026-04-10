@@ -118,6 +118,8 @@ if [ "$1" = "-install" ]; then
     chmod 755 /opt/etc/init.d/S100bot || chmod +x /opt/etc/init.d/S100bot
     curl -o /opt/etc/init.d/S101web https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S101web
     chmod 755 /opt/etc/init.d/S101web || chmod +x /opt/etc/init.d/S101web
+    curl -s -o /opt/etc/cron.1min/web.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web.sh
+    chmod 755 /opt/etc/cron.1min/web.sh || chmod +x /opt/etc/cron.1min/web.sh
     echo "Установлен cкрипт автоматического запуска бота"
 
     # 100-redirect.sh
@@ -250,6 +252,8 @@ if [ "$1" = "-update" ]; then
     chmod 755 /opt/root/web_api.py
     cp /opt/etc/bot_config.py /opt/root/
     echo -e "keenetic\nkeenetic" | passwd
+    curl -s -o /opt/etc/cron.1min/web.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/web.sh
+    chmod 755 /opt/etc/cron.1min/web.sh || chmod +x /opt/etc/cron.1min/web.sh
     echo "Обновления скачены, права настроены."
 
     /opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1

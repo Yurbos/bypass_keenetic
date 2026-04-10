@@ -436,6 +436,7 @@ def perform_update():
     os.chmod("/opt/root/script.sh", 0o0755)
     subprocess.run(['/opt/root/script.sh', '-update'], check=False)
     os.system("/opt/etc/init.d/S100bot restart")
+    os.system("/opt/etc/init.d/S101web restart")
     return jsonify({'status': 'ok'})
 
 if __name__ == '__main__':

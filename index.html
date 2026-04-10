@@ -143,7 +143,7 @@
             const lists = listsData.lists;
             if (!lists.includes(currentList) && lists.length) currentList = lists[0];
             const content = await apiCall(`lists/${currentList}`);
-            const domainsHtml = content.domains.map(d => `<div class="domain-item">📌 ${escapeHtml(d)}</div>`).join('');
+            const domainsHtml = content.domains.map(d => `<div class="domain-item">${escapeHtml(d)}</div>`).join('');
             return `
                 <div class="section-title">
                     📝 Списки обхода
